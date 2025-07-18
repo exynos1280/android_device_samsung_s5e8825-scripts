@@ -10,3 +10,11 @@ if ! grep -q "smscPduToPhoneNumber" "frameworks/opt/telephony/src/java/com/andro
   popd > /dev/null
   echo "Telephony patches applied successfully."
 fi
+
+if [ -d "hardware/samsung/doze" ]; then
+    rm -rf "hardware/samsung/doze"
+fi
+
+if [ -d "hardware/samsung/AdvancedDisplay" ]; then
+    rm -rf "hardware/samsung/AdvancedDisplay"
+fi
