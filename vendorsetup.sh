@@ -30,3 +30,14 @@ if ! grep -q "smscPduToPhoneNumber" "frameworks/opt/telephony/src/java/com/andro
   popd > /dev/null
   echo "Telephony patches applied successfully."
 fi
+
+if [ -f "hardware/lineage/interfaces/health/aidl/default/FastCharge.cpp" ]; then
+  echo "Reverting IFastCharge HAL changes..."
+
+  pushd "hardware/lineage/interfaces" > /dev/null
+  git fetch https://github.com/Flopster101/android_hardware_lineage_interfaces edf551e9afacee35e43e021b96577067fd5d02f0
+
+  git cherry-pick edf551e9afacee35e43e021b96577067fd5d02f0
+
+  popd > /dev/null
+fi
