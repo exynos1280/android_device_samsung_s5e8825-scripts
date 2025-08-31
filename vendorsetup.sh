@@ -41,3 +41,15 @@ if [ -f "hardware/lineage/interfaces/health/aidl/default/FastCharge.cpp" ]; then
 
   popd > /dev/null
 fi
+
+if ! grep -q "mass_storage" "hardware/samsung/aidl/usb/gadget/UsbGadget.cpp"; then
+  echo "Applying DriveDroid mass_storage fix..."
+
+  pushd "hardware/samsung" > /dev/null
+
+  git fetch https://github.com/exynos1280/android_hardware_samsung lineage-22.2-usbgadgetfix
+
+  git cherry-pick 904f4793f97ad745c59a1ef8c4cd6669192f27e8
+
+  popd > /dev/null
+fi
