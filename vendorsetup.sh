@@ -16,7 +16,7 @@ if ! grep -q "smscPduToPhoneNumber" "frameworks/opt/telephony/src/java/com/andro
   echo "Applying Samsung SMSC patches to Telephony..."
 
   pushd "frameworks/opt/telephony" > /dev/null
-  git fetch https://github.com/Flopster101/platform_frameworks_opt_telephony android-15.0.0_r26-td
+  git fetch https://github.com/exynos1280/platform_frameworks_opt_telephony android-15.0.0_r26-td
 
   # 1. "ignore invalid SMSC" patch from PHH
   git cherry-pick 0fdaaba9c88cbc3d8c9c5288d6d2820fd6bd344e
@@ -35,7 +35,7 @@ if [ -f "hardware/lineage/interfaces/health/aidl/default/FastCharge.cpp" ]; then
   echo "Reverting IFastCharge HAL changes..."
 
   pushd "hardware/lineage/interfaces" > /dev/null
-  git fetch https://github.com/Flopster101/android_hardware_lineage_interfaces edf551e9afacee35e43e021b96577067fd5d02f0
+  git fetch https://github.com/exynos1280/android_hardware_lineage_interfaces edf551e9afacee35e43e021b96577067fd5d02f0
 
   git cherry-pick edf551e9afacee35e43e021b96577067fd5d02f0
 
