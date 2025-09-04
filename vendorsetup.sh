@@ -38,3 +38,22 @@ if ! grep -q "mass_storage" "hardware/samsung/aidl/usb/gadget/UsbGadget.cpp"; th
 
   popd > /dev/null
 fi
+
+echo "Cleaning up Lineage sepolicy from slsi sepolicy"
+if [ -d "device/samsung_slsi/sepolicy" ]; then
+  pushd "device/samsung_slsi/sepolicy" > /dev/null
+
+  find . -type f -iname '*lineage*.te' -print -exec rm -f -- {} +
+
+  find . -type f -name 'file_contexts' -print0 | while IFS= read -r -d '' fc; do
+    if grep -qE 'vendor\.lineage|hal_lineage' "$fc"; then
+      sed -i '/vendor\.lineage/d; /hal_lineage/d' "$fc"
+      awk 'NF{p=1; print; next} p{print ""; p=0}' "$fc" > "${fc}.tmp" && mv "${fc}.tmp" "$fc"
+      echo "Cleaned $fc"
+    fi
+  done
+
+  popd > /dev/null
+  echo "Lineage sepolicy cleanup finished"
+fi
+
