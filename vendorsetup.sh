@@ -19,10 +19,6 @@ if [ -d "hardware/samsung/hidl/livedisplay" ]; then
     rm -rf "hardware/samsung/hidl/livedisplay"
 fi
 
-if [ -d "hardware/samsung/aidl/touch" ]; then
-    rm -rf "hardware/samsung/aidl/touch"
-fi
-
 if [ -d "hardware/samsung/AdvancedDisplay" ]; then
     rm -rf "hardware/samsung/AdvancedDisplay"
 fi
@@ -57,3 +53,15 @@ if [ -d "device/samsung_slsi/sepolicy" ]; then
   echo "Lineage sepolicy cleanup finished"
 fi
 
+if [ ! -d "hardware/lineage/interfaces/touch/aidl" ]; then
+  echo "Updating Lineage Touch interface..."
+  (
+    cd "hardware/lineage/interfaces"
+    
+    git fetch https://github.com/LineageOS/android_hardware_lineage_interfaces 5a722338453640fe1006d08d06c53bafd5dae7ea
+
+    git cherry-pick 5a722338453640fe1006d08d06c53bafd5dae7ea
+  )
+
+  popd > /dev/null
+fi
