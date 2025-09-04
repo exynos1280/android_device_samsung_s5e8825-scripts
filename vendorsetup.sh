@@ -15,6 +15,14 @@ if [ -d "hardware/samsung/doze" ]; then
     rm -rf "hardware/samsung/doze"
 fi
 
+if [ -d "hardware/samsung/hidl/livedisplay" ]; then
+    rm -rf "hardware/samsung/hidl/livedisplay"
+fi
+
+if [ -d "hardware/samsung/aidl/touch" ]; then
+    rm -rf "hardware/samsung/aidl/touch"
+fi
+
 if [ -d "hardware/samsung/AdvancedDisplay" ]; then
     rm -rf "hardware/samsung/AdvancedDisplay"
 fi
