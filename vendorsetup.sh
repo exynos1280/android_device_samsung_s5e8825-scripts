@@ -65,3 +65,13 @@ if [ ! -d "hardware/lineage/interfaces/touch/aidl" ]; then
 
   popd > /dev/null
 fi
+
+if ! grep -q "disabled" "bootable/deprecated-ota/applypatch/vendor_flash_recovery.rc"; then
+  echo "Disabling vendor_flash_recovery service..."
+  
+  pushd "bootable/deprecated-ota/applypatch" > /dev/null
+  
+  sed -i '/^service vendor_flash_recovery \/vendor\/bin\/install-recovery\.sh$/a\    disabled' vendor_flash_recovery.rc
+  
+  popd > /dev/null
+fi
