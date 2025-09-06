@@ -1,3 +1,5 @@
+REPO_DIR="device/samsung/s5e8825-scripts"
+
 if ! grep -q "smscPduToPhoneNumber" "frameworks/opt/telephony/src/java/com/android/internal/telephony/RadioResponse.java"; then
   echo "Applying Samsung SMSC patches to Telephony..."
 
@@ -74,4 +76,15 @@ if ! grep -q "disabled" "bootable/deprecated-ota/applypatch/vendor_flash_recover
   sed -i '/^service vendor_flash_recovery \/vendor\/bin\/install-recovery\.sh$/a\    disabled' vendor_flash_recovery.rc
   
   popd > /dev/null
+fi
+
+if ! grep -q "config.show4gForLte = true" "frameworks/base/packages/SettingsLib/src/com/android/settingslib/mobile/MobileMappings.java"; then
+  echo "Applying 4G icon force patch..."
+  
+  pushd "frameworks/base" > /dev/null
+  
+  git apply "$REPO_DIR/patches/0001-Force-4G-icon-on-status-bar-for-all-carriers.patch"
+  
+  popd > /dev/null
+  echo "4G icon patch applied successfully."
 fi
