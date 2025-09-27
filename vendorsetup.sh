@@ -1,3 +1,5 @@
+SCRIPTS_ROOT="$(realpath device/samsung/s5e8825-scripts)"
+
 if ! grep -q "smscPduToPhoneNumber" "frameworks/opt/telephony/src/java/com/android/internal/telephony/RadioResponse.java"; then
   echo "Applying Samsung SMSC patches to Telephony..."
 
@@ -7,4 +9,14 @@ if ! grep -q "smscPduToPhoneNumber" "frameworks/opt/telephony/src/java/com/andro
       git cherry-pick 28fe40db08282f5a9cacccbacd1447fa6998c03c
   )
   echo "Telephony patches applied successfully."
+fi
+
+if ! grep -q "build_maintainer" "packages/apps/Settings/res/values/cm_strings.xml"; then
+  echo "Applying Settings maintainer patch..."
+
+  (
+      cd "packages/apps/Settings"
+      git am -3 "$SCRIPTS_ROOT/patches/0001-Settings-Add-Maintainer-string-into-device-info.patch"
+  )
+  echo "Settings maintainer patch applied successfully."
 fi
