@@ -4,9 +4,9 @@ if ! grep -q "smscPduToPhoneNumber" "frameworks/opt/telephony/src/java/com/andro
   echo "Applying Samsung SMSC patches to Telephony..."
 
   (
-      cd "frameworks/opt/telephony"
-      git fetch https://github.com/exynos1280/platform_frameworks_opt_telephony android-15.0.0_r26
-      git cherry-pick 28fe40db08282f5a9cacccbacd1447fa6998c03c
+    cd "frameworks/opt/telephony"
+    git fetch https://github.com/exynos1280/platform_frameworks_opt_telephony android-15.0.0_r26
+    git cherry-pick 28fe40db08282f5a9cacccbacd1447fa6998c03c
   )
   echo "Telephony patches applied successfully."
 fi
@@ -14,8 +14,8 @@ fi
 echo "-> Checking for Settings patches to apply..."
 if ! grep -q "build_maintainer" "packages/apps/Settings/res/values/cm_strings.xml"; then
   (
-      cd "packages/apps/Settings"
-      git am -3 "$SCRIPTS_ROOT/patches/0001-Settings-Add-Maintainer-string-into-device-info.patch"
+    cd "packages/apps/Settings"
+    git am -3 "$SCRIPTS_ROOT/patches/0001-Settings-Add-Maintainer-string-into-device-info.patch"
   )
 fi
 
