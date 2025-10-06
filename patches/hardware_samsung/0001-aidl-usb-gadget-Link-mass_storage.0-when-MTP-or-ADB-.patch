@@ -1,0 +1,40 @@
+From ca49f8317e55c6ed548061972e68e3d872a700a8 Mon Sep 17 00:00:00 2001
+From: Cyber Knight <cyberknight755@gmail.com>
+Date: Tue, 3 Jun 2025 23:28:45 +0800
+Subject: [PATCH 1/2] aidl: usb: gadget: Link mass_storage.0 when MTP or ADB is
+ enabled
+
+- This fixes DriveDroid functionality when coupled together with [1].
+
+[1]: https://github.com/yaap/device_motorola_cancunf/commit/0e435675d7b75ba8630f0844a88eaf3ce03fef23
+
+Test: Open DriveDroid, host an image, change usb configuration to File Transfer and try to boot an OS on PC by plugging in the phone.
+Change-Id: I7956e14fb8239d273e687b61ed4154a0695460ce
+Signed-off-by: Cyber Knight <cyberknight755@gmail.com>
+[Flopster101: Also enable for ADB, it's more convenient since MTP isn't on by default.]
+Signed-off-by: Flopster101 <nahuelgomez329@gmail.com>
+Signed-off-by: Majaahh <maja.blaszczak@proton.me>
+---
+ aidl/usb/gadget/UsbGadget.cpp | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/aidl/usb/gadget/UsbGadget.cpp b/aidl/usb/gadget/UsbGadget.cpp
+index e4053e4..8bfefe0 100644
+--- a/aidl/usb/gadget/UsbGadget.cpp
++++ b/aidl/usb/gadget/UsbGadget.cpp
+@@ -270,6 +270,12 @@ Status UsbGadget::setupFunctions(long functions, const shared_ptr<IUsbGadgetCall
+         }
+     }
+ 
++    if ((functions == GadgetFunction::ADB) || ((functions & GadgetFunction::MTP) != 0)) {
++        ALOGI("setCurrentUsbFunctions mass_storage");
++        if (linkFunction("mass_storage.0", i++))
++            return Status::ERROR;
++    }
++
+     // Pull up the gadget right away when there are no ffs functions.
+     if (!ffsEnabled) {
+         if (!WriteStringToFile(kGadgetName, PULLUP_PATH)) {
+-- 
+2.54.0
+

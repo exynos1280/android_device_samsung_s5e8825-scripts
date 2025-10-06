@@ -10,6 +10,16 @@ if ! grep -q "smscPduToPhoneNumber" "frameworks/opt/telephony/src/java/com/andro
   echo "Telephony patches applied successfully."
 fi
 
+if ! grep -q "setCurrentUsbFunctions mass_storage" "hardware/samsung/aidl/usb/gadget/UsbGadget.cpp"; then
+  echo "Applying Samsung mass storage patch..."
+
+  (
+    cd "hardware/samsung"
+    git am -3 "$SCRIPTS_ROOT/patches/hardware_samsung/0001-aidl-usb-gadget-Link-mass_storage.0-when-MTP-or-ADB-.patch"
+    git am -3 "$SCRIPTS_ROOT/patches/hardware_samsung/0002-aidl-usb-gadget-Don-t-bail-out-on-mass_storage-link-.patch"
+  )
+fi
+
 # SBC HD (Dual Channel) Bluetooth audio patches
 # Set SKIP_SBC_HD_PATCHES=1 to disable these patches
 if [ "$SKIP_SBC_HD_PATCHES" != "1" ]; then
