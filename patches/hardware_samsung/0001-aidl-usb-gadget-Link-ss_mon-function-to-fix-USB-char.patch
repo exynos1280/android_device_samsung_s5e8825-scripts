@@ -1,0 +1,53 @@
+From 21241ed800ed8baf6cfccef544a43681b9e7f3db Mon Sep 17 00:00:00 2001
+From: Flopster101 <nahuelgomez329@gmail.com>
+Date: Thu, 9 Jul 2026 20:50:14 -0300
+Subject: [PATCH] aidl: usb: gadget: Link ss_mon function to fix USB charging
+ current limit
+
+The SuperSpeed Monitor (ss_mon) gadget is responsible for telling
+sec_battery the charging current ceiling for USB charging. Without it,
+the max limit defaults to 100mA.
+
+The functions also need to be created in the device init:
+
+    # ss_mon functions
+    mkdir /config/usb_gadget/g1/functions/ss_mon.mtp
+    mkdir /config/usb_gadget/g1/functions/ss_mon.ptp
+    mkdir /config/usb_gadget/g1/functions/ss_mon.etc
+
+Change-Id: Ic09c3a9829b755ebdce2653c04374541e4ba96f0
+Signed-off-by: Flopster101 <nahuelgomez329@gmail.com>
+---
+ aidl/usb/gadget/UsbGadget.cpp | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/aidl/usb/gadget/UsbGadget.cpp b/aidl/usb/gadget/UsbGadget.cpp
+index e4053e4..40abb5b 100644
+--- a/aidl/usb/gadget/UsbGadget.cpp
++++ b/aidl/usb/gadget/UsbGadget.cpp
+@@ -251,6 +251,22 @@ Status UsbGadget::setupFunctions(long functions, const shared_ptr<IUsbGadgetCall
+     bool ffsEnabled = false;
+     int i = 0;
+ 
++    std::string ssMonFunction;
++    if ((functions & GadgetFunction::MTP) != 0) {
++        ssMonFunction = "ss_mon.mtp";
++    } else if ((functions & GadgetFunction::PTP) != 0) {
++        ssMonFunction = "ss_mon.ptp";
++    } else {
++        ssMonFunction = "ss_mon.etc";
++    }
++
++    if (!linkFunction(ssMonFunction.c_str(), i)) {
++        ALOGI("Linked %s", ssMonFunction.c_str());
++        i++;
++    } else {
++        ALOGW("%s not available", ssMonFunction.c_str());
++    }
++
+     if (Status(addGenericAndroidFunctions(&monitorFfs, functions, &ffsEnabled, &i)) !=
+         Status::SUCCESS) {
+         return Status::ERROR;
+-- 
+2.55.0
+

@@ -10,6 +10,15 @@ if ! grep -q "setCurrentUsbFunctions mass_storage" "hardware/samsung/aidl/usb/ga
   )
 fi
 
+if ! grep -q "ssMonFunction" "hardware/samsung/aidl/usb/gadget/UsbGadget.cpp"; then
+  echo "Applying Samsung ss_mon fix..."
+
+  (
+    cd "hardware/samsung"
+    git am -3 "$SCRIPTS_ROOT/patches/hardware_samsung/0001-aidl-usb-gadget-Link-ss_mon-function-to-fix-USB-char.patch"
+  )
+fi
+
 # SBC HD (Dual Channel) Bluetooth audio patches
 # Set SKIP_SBC_HD_PATCHES=1 to disable these patches
 if [ "$SKIP_SBC_HD_PATCHES" != "1" ]; then
